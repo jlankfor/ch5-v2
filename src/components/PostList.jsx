@@ -5,7 +5,7 @@ import { Post } from './Post.jsx'
 export function PostList({ posts = [] }) {
   return (
     <div>
-      {posts.map((post, index) => (
+      {posts.map((post) => (
         <Fragment key={post._id}>
           <Post {...post} />
           <hr />
@@ -15,6 +15,7 @@ export function PostList({ posts = [] }) {
   )
 }
 
+// define propTypes for PostList, shape function defines the shape of the object
 PostList.propTypes = {
   posts: PropTypes.arrayOf(PropTypes.shape(Post.propTypes)).isRequired,
 }
