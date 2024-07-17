@@ -3,23 +3,28 @@ import { useState } from 'react'
 import { createPost } from '../api/posts.js'
 
 export function CreatePost() {
+  // define state hooks for title, author, and content
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
   const [contents, setContents] = useState('')
 
+  // useQueryClient to invalidate all queries starting with 'posts' queryKey
+  // works with any query params to the getPosts request
   const queryClient = useQueryClient()
+  // define a mutation hook to create a post
   const createPostMutation = useMutation({
     mutationFn: () => createPost({ title, author, contents }),
-    onSuccess: () => queryClient.invalidateQueries(['posts']),
+    onSuccess: () => queryClient.invalidateQueries({ queryKey: ['posts'] }),
   })
 
-  const handleSubmit = (e) => {
+  const handelSubmit = (e) => {
+    // prevent default form submission (prevent page refresh)
     e.preventDefault()
     createPostMutation.mutate()
   }
 
   return (
-    <form onSubmit={handleSubmit}>
+    <form onSubmit={handelSubmit}>
       <div>
         <label htmlFor='create-title'>Title: </label>
         <input
@@ -30,7 +35,7 @@ export function CreatePost() {
           onChange={(e) => setTitle(e.target.value)}
         />
       </div>
-      <br />
+      <br />{' '}
       <div>
         <label htmlFor='create-author'>Author: </label>
         <input
@@ -57,6 +62,7 @@ export function CreatePost() {
         <>
           <br />
           Post created successfully!
+          <br />
         </>
       ) : null}
     </form>
